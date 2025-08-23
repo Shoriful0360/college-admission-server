@@ -31,7 +31,7 @@ async function run() {
     app.post('/user/:email',async(req,res)=>{
       const user=req.body;
       const email=req.params.email;
-      console.log('user',user)
+ 
       const query={email}
       const filter=await userCollection.findOne(query);
       if(filter){
@@ -42,9 +42,18 @@ async function run() {
           ...user
         }
       )
-      console.log('result',result)
+
       res.send(result)
 
+    })
+
+    // get user from database
+    app.get('/user/:email',async(req,res)=>{
+      const email=req.params.email;
+      const query={email}
+      const result=await userCollection.findOne(query)
+    
+      res.send(result)
     })
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
