@@ -72,11 +72,32 @@ async function run() {
       res.send(result)
     })
 
-    // get all college collection
+    // get limit college collection
     app.get('/limit_colleges',async(req,res)=>{
       const result=await collegeCollection.find().limit(4).toArray()
       res.send(result)
     })
+   app.get('/colleges', async (req, res) => {
+  try {
+    const search = req.query.search; // query থেকে name নিলাম
+    let query = {};
+
+    // যদি search দেওয়া থাকে, তাহলে filter তৈরি করব
+    if (search) {
+      query = {
+        name: { $regex: search, $options: "i" }  // i = case-insensitive
+      };
+    }
+
+    // যদি search না থাকে, query খালি → সব data fetch হবে
+    const result = await collegeCollection.find(query).toArray();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Something went wrong" });
+  }
+});
+
 
     // single college from college collection
     app.get('/college/:id',async(req,res)=>{
