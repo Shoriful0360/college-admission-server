@@ -55,6 +55,21 @@ async function run() {
     
       res.send(result)
     })
+
+    // update user info
+    app.put('/users/:email',async(req,res)=>{
+      const email=req.params.email;
+    
+      const updateData=req.body;
+
+   
+      const result=await userCollection.updateOne(
+        {email},
+        {$set:updateData}
+        
+      )
+      res.send(result)
+    })
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
