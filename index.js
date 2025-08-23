@@ -9,7 +9,7 @@ app.use(cors());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = process.env.MONGO_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -75,6 +75,15 @@ async function run() {
     // get all college collection
     app.get('/limit_colleges',async(req,res)=>{
       const result=await collegeCollection.find().limit(4).toArray()
+      res.send(result)
+    })
+
+    // single college from college collection
+    app.get('/college/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id: new ObjectId(id)}
+      const result=await collegeCollection.findOne(query)
+
       res.send(result)
     })
 
