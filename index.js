@@ -158,7 +158,16 @@ async function run() {
 
     // papers
     app.get('/papers',async(req,res)=>{
-      const result=
+      const result=await papersCollection.find().toArray()
+      res.send(result)
+    })
+
+    // get one papers by id
+    app.get('/research/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await papersCollection.findOne(query)
+      res.send(result)
     })
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
