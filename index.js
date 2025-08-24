@@ -27,6 +27,9 @@ async function run() {
 
     const userCollection= client.db("collegeAdmission").collection("user");
     const collegeCollection=client.db("collegeAdmission").collection("colleges");
+    const collegeNameCollection=client.db("collegeAdmission").collection("college_name");
+    const admissionCollection=client.db("collegeAdmission").collection("admission");
+    const reviewCollection=client.db("collegeAdmission").collection("review");
 
     // user save in database
     app.post('/user/:email',async(req,res)=>{
@@ -77,6 +80,8 @@ async function run() {
       const result=await collegeCollection.find().limit(4).toArray()
       res.send(result)
     })
+
+    // collect total colleges
    app.get('/colleges', async (req, res) => {
   try {
     const search = req.query.search; // query থেকে name নিলাম
@@ -108,6 +113,38 @@ async function run() {
       res.send(result)
     })
 
+
+    // get college name
+    app.get('/college_name',async(req,res)=>{
+      const result=await collegeNameCollection.find().toArray()
+      return res.send(result)
+    })
+
+    // save admission info
+    app.post('/admission',async(req,res)=>{
+      const formData=req.body;
+      const result=await admissionCollection.insertOne(formData)
+      return res.send(result)
+    })
+
+    // my admission
+    app.get('/my_admission/:email',async(req,res)=>{
+      const email=req.params.email;
+      const query={email}
+      if(email){
+
+        const result=await admissionCollection.find(query).toArray()
+        res.send(result)
+      }
+    
+    })
+
+    // review save in database
+    app.post('/reviews',async(req,res)=>{
+      const formData=req.body;
+      const result=await reviewCollection.insertOne(formData)
+      return res.send(result)
+    })
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
