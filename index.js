@@ -5,7 +5,10 @@ const port=process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin:['https://college-admission-50857.web.app','http://localhost:5174','http://localhost:5173'],
+    credentials: true
+}));
 
 
 
@@ -30,6 +33,7 @@ async function run() {
     const collegeNameCollection=client.db("collegeAdmission").collection("college_name");
     const admissionCollection=client.db("collegeAdmission").collection("admission");
     const reviewCollection=client.db("collegeAdmission").collection("review");
+    const papersCollection=client.db("collegeAdmission").collection("research_papers");
 
     // user save in database
     app.post('/user/:email',async(req,res)=>{
@@ -145,14 +149,25 @@ async function run() {
       const result=await reviewCollection.insertOne(formData)
       return res.send(result)
     })
+
+    // get all review
+    app.get('/reviews',async(req,res)=>{
+      const result=await reviewCollection.find().toArray()
+      res.send(result)
+    })
+
+    // papers
+    app.get('/papers',async(req,res)=>{
+      const result=
+    })
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
 // Get all tasks
 
   
   
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
