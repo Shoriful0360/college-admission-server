@@ -184,6 +184,23 @@ async function run() {
       res.send(result)
 
     })
+
+    // edit comment
+    app.patch('/college/:collegeId/comment/:commentId',async(req,res)=>{
+      const{collegeId,commentId}=req.params;
+      const {comment}=req.body;
+
+      const result=await collegeCollection.updateOne(
+        {
+          _id:new ObjectId(collegeId),
+          "comments.id":parseInt(commentId)
+        },
+        {
+          $set:{"comments.$.comment":comment}
+        }
+      )
+      res.send(result)
+    })
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection
